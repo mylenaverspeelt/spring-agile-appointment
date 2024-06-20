@@ -26,10 +26,12 @@ public class AppointmentService {
 
     public Appointment scheduleAppointment(Long patientId, LocalDate date, LocalTime time, String specialty) throws Exception {
 
-        List<Appointment> sameTimeSchedule = appointmentRepository.findByDateAndTimeAndSpecialty(date, time, specialty);
-
         if (date.isBefore(LocalDate.now()) && time.isBefore(LocalTime.now())) {
             throw new IllegalArgumentException("Consultas não podem ser marcadas antes da data atual.");
+        }
+        List<Appointment> sameTimeSchedule = appointmentRepository.findByDateAndTime(date, time);
+        if (!sameTimeSchedule.isEmpty()) {
+            throw new Exception("Já existe uma consulta agendada para essa data e horário. Tente novamente.");
         }
 
         Optional<Patient> registeredPatient = patientRepository.findById(patientId);
@@ -65,4 +67,6 @@ public class AppointmentService {
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }
+
+
 }
