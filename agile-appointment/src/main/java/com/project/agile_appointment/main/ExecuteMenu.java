@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -97,9 +98,9 @@ public class ExecuteMenu {
 
         Patient selectedPatient = patientsList.get(patientIndex);
 
-        System.out.println("Informe a data da consulta (formato: YYYY-MM-DD):");
+        System.out.println("Informe a data da consulta (formato: DD-MM-AAA):");
         String dateInput = scanner.nextLine();
-        LocalDate date = LocalDate.parse(dateInput);
+        LocalDate date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
         System.out.println("Informe o horário da consulta (formato: HH:MM):");
         String timeInput = scanner.nextLine();
@@ -110,7 +111,8 @@ public class ExecuteMenu {
 
         try {
             var newAppointment = appointmentService.scheduleAppointment(selectedPatient.getId(), date, time, specialty);
-            System.out.println("Consulta agendada com sucesso para o dia " + newAppointment.getDate() + " às " + newAppointment.getTime() + " para a especialidade " + newAppointment.getSpecialty());
+            var formattedDate = newAppointment.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            System.out.println("Consulta agendada com sucesso para o dia " + formattedDate + " às " + newAppointment.getTime() + " para a especialidade " + newAppointment.getSpecialty());
         } catch (Exception e) {
             System.out.println("Erro ao agendar consulta: " + e.getMessage());
         } finally {
@@ -134,19 +136,20 @@ public class ExecuteMenu {
 
         System.out.println("Consultas Agendadas:");
         for (int i = 0; i < appointmentsList.size(); i++) {
-            System.out.println((i + 1) + " - " + appointmentsList.get(i).getSpecialty() + " - " + appointmentsList.get(i).getPatient().getName() + " - " + appointmentsList.get(i).getDate() + " - " + appointmentsList.get(i).getTime());
+            var formattedDate = appointmentsList.get(i).getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            System.out.println((i + 1) + " - " + appointmentsList.get(i).getSpecialty() + " - " + appointmentsList.get(i).getPatient().getName() + " - " + formattedDate + " - " + appointmentsList.get(i).getTime());
         }
 
         System.out.println("Informe qual consulta você deseja cancelar:");
         int appointmentIndex = scanner.nextInt();
         scanner.nextLine();
 
-        if (appointmentIndex == 0 || appointmentIndex >= appointmentsList.size()) {
+        if (appointmentIndex < 1 || appointmentIndex > appointmentsList.size()) {
             System.out.println("Opção inválida, tente novamente");
-            schedule();
+            cancel();
         }
 
-        Appointment selectedAppointment = appointmentsList.get(appointmentIndex);
+        Appointment selectedAppointment = appointmentsList.get(appointmentIndex -1);
 
         try {
             appointmentService.cancelAppointment(selectedAppointment.getId());
