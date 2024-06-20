@@ -9,20 +9,20 @@ import java.util.Optional;
 
 @Service
 public class PatientService {
+
     @Autowired
-    private PatientRepository patientRepository;
+    PatientRepository patientRepository;
 
     public Patient registerNewPatient(String name, String phone) throws Exception {
         Optional<Patient> registeredUser = patientRepository.findByPhone(phone);
+
         if (registeredUser.isPresent()) {
             throw new Exception("Paciente já cadastrado!");
         }
+
         Patient newPatient = new Patient();
         newPatient.setName(name);
         newPatient.setPhone(phone);
         return patientRepository.save(newPatient);
     }
-
-
-
 }

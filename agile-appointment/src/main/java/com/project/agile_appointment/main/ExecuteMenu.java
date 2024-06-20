@@ -1,7 +1,7 @@
 package com.project.agile_appointment.main;
 
-import com.project.agile_appointment.service.AppointmentService;
 import com.project.agile_appointment.service.PatientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -9,12 +9,15 @@ import java.util.Scanner;
 @Component
 public class ExecuteMenu {
 
-    private Scanner scanner = new Scanner(System.in);
-    PatientService patientService;
-    AppointmentService appointmentService;
+    private final Scanner scanner = new Scanner(System.in);
+    private final PatientService patientService;
 
-    public void showMenu() {
-        var menu = """
+    @Autowired
+    public ExecuteMenu(PatientService patientService) {
+        this.patientService = patientService;
+    }
+    public void showMenu() throws Exception {
+        String menu = """
                 1 - Cadastrar novo paciente
                 2 - Marcação de consultas
                 3 - Cancelamento de consultas
@@ -22,12 +25,12 @@ public class ExecuteMenu {
                 """;
 
         System.out.println(menu);
-        var option = scanner.nextInt();
+        int option = scanner.nextInt();
         scanner.nextLine();
 
         switch (option) {
             case 1:
-                registerNewUser();
+                newPatient();
                 break;
             case 2:
                 scheduleAppointment();
@@ -43,19 +46,23 @@ public class ExecuteMenu {
         }
     }
 
-    public void registerNewUser() {
+    public void newPatient() throws Exception {
+        System.out.println("Informe o seu primeiro nome:");
+        String name = scanner.nextLine();
+        System.out.println("Informe o seu telefone para contato:");
+        String phone = scanner.nextLine();
 
+        try {
+            var registeredPatient = patientService.registerNewPatient(name, phone);
+            System.out.println("Paciente " + registeredPatient.getName() + " registrado com sucesso!");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void scheduleAppointment() {
-
     }
 
     public void cancelAppointment() {
-
     }
-
-
 }
-
-
