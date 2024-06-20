@@ -7,7 +7,8 @@ import com.project.agile_appointment.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +24,11 @@ public class AppointmentService {
         this.patientRepository = patientRepository;
     }
 
-    public Appointment scheduleAppointment(Long patientId, LocalDateTime dateAndTime, String specialty) throws Exception {
+    public Appointment scheduleAppointment(Long patientId, LocalDate date, LocalTime time, String specialty) throws Exception {
 
-        List<Appointment> sameTimeSchedule = appointmentRepository.findByDateAndTimeAndSpecialty(dateAndTime, specialty);
+        List<Appointment> sameTimeSchedule = appointmentRepository.findByDateAndTimeAndSpecialty(date, time, specialty);
 
-        if (dateAndTime.isBefore(LocalDateTime.now())) {
+        if (date.isBefore(LocalDate.now()) && time.isBefore(LocalTime.now())) {
             throw new IllegalArgumentException("Consultas não podem ser marcadas antes da data atual.");
         }
 
@@ -43,7 +44,8 @@ public class AppointmentService {
         Patient patient = registeredPatient.get();
         Appointment appointment = new Appointment();
         appointment.setPatient(patient);
-        appointment.setDateAndTime(dateAndTime);
+        appointment.setDate(date);
+        appointment.setTime(time);
         appointment.setSpecialty(specialty);
 
         return appointmentRepository.save(appointment);
