@@ -1,5 +1,6 @@
 package com.project.agile_appointment.main;
 
+import com.project.agile_appointment.models.Appointment;
 import com.project.agile_appointment.models.Patient;
 import com.project.agile_appointment.repository.AppointmentRepository;
 import com.project.agile_appointment.service.AppointmentService;
@@ -122,7 +123,40 @@ public class ExecuteMenu {
         }
     }
 
-    public void cancel() {
+    public void cancel() throws Exception {
+
+        List<Appointment> appointmentsList = appointmentService.getAllAppointments();
+
+        if (appointmentsList.isEmpty()) {
+            System.out.println("Nenhuma consulta marcada. Realize a marcação na opção 2 do menu.");
+            showMenu();
+        }
+
+        System.out.println("Consultas Agendadas:");
+        for (int i = 0; i < appointmentsList.size(); i++) {
+            System.out.println((i + 1) + " - " + appointmentsList.get(i).getSpecialty() + " - " + appointmentsList.get(i).getPatient().getName() + " - " + appointmentsList.get(i).getDate() + " - " + appointmentsList.get(i).getTime());
+        }
+
+        System.out.println("Informe qual consulta você deseja cancelar:");
+        int appointmentIndex = scanner.nextInt();
+        scanner.nextLine();
+
+        if (appointmentIndex == 0 || appointmentIndex >= appointmentsList.size()) {
+            System.out.println("Opção inválida, tente novamente");
+            schedule();
+        }
+
+        Appointment selectedAppointment = appointmentsList.get(appointmentIndex);
+
+        try {
+            appointmentService.cancelAppointment(selectedAppointment.getId());
+            System.out.println("Consulta cancelada com sucesso!");
+            showMenu();
+        } catch (Exception e) {
+            System.out.println("Erro ao cancelar consulta: " + e.getMessage());
+        } finally {
+            showMenu();
+        }
     }
 
 }

@@ -61,4 +61,8 @@ public class AppointmentService {
 
         appointmentRepository.delete(scheduledAppointment.get());
     }
+
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
 }
