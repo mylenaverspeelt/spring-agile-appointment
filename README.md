@@ -2,8 +2,6 @@
 
 Este projeto consiste em uma aplicação de linha de comando para marcação/desmarcação de consultas médicas. Ele foi desenvolvido como parte do Processo Seletivo da Aceleradora Ágil onde pude demonstrar minhas habilidades com Spring e H2 database.
 
-- A aplicação está hospedada na ** e pode ser acessada através do seguinte link:
-
 ### Funcionalidades
 
 - Cadastro de Paciente: Permite cadastrar novos pacientes garantindo unicidade pelo número de telefone.
@@ -77,4 +75,4 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-- A aplicação será inicializada e o menu será executado
+- A aplicação será inicializada e o menu será executado no console.
