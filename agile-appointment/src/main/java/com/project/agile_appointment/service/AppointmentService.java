@@ -27,7 +27,7 @@ public class AppointmentService {
     public Appointment scheduleAppointment(Long patientId, LocalDate date, LocalTime time, String specialty) throws Exception {
 
         if (date.isBefore(LocalDate.now()) && time.isBefore(LocalTime.now())) {
-            throw new IllegalArgumentException("Consultas não podem ser marcadas antes da data atual.");
+            throw new IllegalArgumentException("Consultas não podem ser marcadas antes da data e hora atuais.");
         }
         List<Appointment> sameTimeSchedule = appointmentRepository.findByDateAndTime(date, time);
         if (!sameTimeSchedule.isEmpty()) {
@@ -37,10 +37,6 @@ public class AppointmentService {
         Optional<Patient> registeredPatient = patientRepository.findById(patientId);
         if (registeredPatient.isEmpty()) {
             throw new Exception("Paciente não encontrado.");
-        }
-
-        if (!sameTimeSchedule.isEmpty()) {
-            throw new Exception("Já existe uma consulta agendada para essa data e horário.");
         }
 
         Patient patient = registeredPatient.get();

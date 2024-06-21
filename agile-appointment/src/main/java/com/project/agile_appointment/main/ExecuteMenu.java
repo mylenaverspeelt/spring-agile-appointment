@@ -36,6 +36,7 @@ public class ExecuteMenu {
                 1 - Cadastrar novo paciente
                 2 - Marcação de consultas
                 3 - Cancelamento de consultas
+                4 - Excluir paciente
                 0 - Sair                               
                 ***************************************  
                 """;
@@ -53,6 +54,9 @@ public class ExecuteMenu {
                 break;
             case 3:
                 cancel();
+                break;
+            case 4:
+                deletePatient();
                 break;
             case 0:
                 System.out.println("Programa encerrado.");
@@ -83,7 +87,7 @@ public class ExecuteMenu {
         List<Patient> patientsList = patientService.getAllPatients();
 
         if (patientsList.isEmpty()) {
-            System.out.println("Nenhum paciente registrado. Realize o cadastro do paciente na opçao 1 do menu.");
+            System.out.println("Nenhum paciente registrado. Realize o cadastro do paciente na opçaão 1 do menu.");
             showMenu();
         }
         System.out.println("Pacientes cadastrados:");
@@ -91,19 +95,15 @@ public class ExecuteMenu {
             System.out.println((i + 1) + " - " + patientsList.get(i).getName());
         }
 
-        System.out.println("Informe para qual paciente deseja realizar a marcação:");
+        System.out.println("Informe o número do paciente que deseja realizar a marcação:");
         int patientIndex = scanner.nextInt() - 1;
         scanner.nextLine();
 
         Patient selectedPatient = patientsList.get(patientIndex);
 
-//        System.out.println("Informe a data da consulta (formato: DD-MM-AAA):");
-//        String dateInput = scanner.nextLine();
         String dateInput = getInput("Informe a data da consulta (formato: DD-MM-AAA):", "^\\d{2}-\\d{2}-\\d{4}$", "Data inválida. Tente novamente.");
         LocalDate date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-//        System.out.println("Informe o horário da consulta (formato: HH:MM):");
-//        String timeInput = scanner.nextLine();
         String timeInput = getInput("Informe o horário da consulta (formato: HH:MM):", "^\\d{2}:\\d{2}$", "Horário inválido. Tente novamente.");
         LocalTime time = LocalTime.parse(timeInput);
 
@@ -121,7 +121,7 @@ public class ExecuteMenu {
         }
 
         if (patientIndex == 0 || patientIndex >= patientsList.size()) {
-            System.out.println("Opção inválida, tente novamente");
+            System.out.println("Opção inválida. Tente novamente");
             schedule();
         }
     }
@@ -141,7 +141,7 @@ public class ExecuteMenu {
             System.out.println((i + 1) + " - " + appointmentsList.get(i).getSpecialty() + " - " + appointmentsList.get(i).getPatient().getName() + " - " + formattedDate + " - " + appointmentsList.get(i).getTime());
         }
 
-        System.out.println("Informe qual consulta você deseja cancelar:");
+        System.out.println("Informe o número da consulta você deseja cancelar:");
         int appointmentIndex = scanner.nextInt();
         scanner.nextLine();
 
@@ -163,6 +163,40 @@ public class ExecuteMenu {
         }
     }
 
+    public void deletePatient() throws Exception {
+        List<Patient> patientsList = patientService.getAllPatients();
+
+        if (patientsList.isEmpty()) {
+            System.out.println("Nenhum paciente registrado.");
+            showMenu();
+        }
+
+        System.out.println("Pacientes cadastrados:");
+        for (int i = 0; i < patientsList.size(); i++) {
+            System.out.println((i + 1) + " - " + patientsList.get(i).getName());
+        }
+
+        System.out.println("Informe o número do paciente que deseja excluir:");
+        int patientIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        if (patientIndex < 0 || patientIndex >= patientsList.size()) {
+            System.out.println("Opção inválida, tente novamente");
+            deletePatient();
+        }
+
+        Patient selectedPatient = patientsList.get(patientIndex);
+
+        try {
+            patientService.deletePatient(selectedPatient.getId());
+            System.out.println("Paciente " + selectedPatient.getName() + " excluído com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao excluir paciente: " + e.getMessage());
+        } finally {
+            showMenu();
+        }
+    }
+
     private String getInput(String prompt, String regex, String errorMessage) {
         Pattern pattern = Pattern.compile(regex);
         String input;
@@ -177,6 +211,7 @@ public class ExecuteMenu {
         }
         return input;
     }
+
 
 
 }

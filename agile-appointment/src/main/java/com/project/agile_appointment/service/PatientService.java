@@ -18,7 +18,7 @@ public class PatientService {
         Optional<Patient> registeredUser = patientRepository.findByPhone(phone);
 
         if (registeredUser.isPresent()) {
-            throw new Exception("Paciente já cadastrado, tente novamente!");
+            throw new Exception("Paciente já cadastrado. Tente novamente.");
         }
 
         Patient newPatient = new Patient();
@@ -29,5 +29,14 @@ public class PatientService {
 
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
+    }
+
+    public void deletePatient(Long id) throws Exception {
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isPresent()) {
+            patientRepository.delete(patient.get());
+        } else {
+            throw new Exception("Paciente não encontrado. Tente novamente.");
+        }
     }
 }
