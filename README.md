@@ -1,4 +1,4 @@
-# Lista de Tarefas
+# Agile Appointment
 
 Este projeto consiste em uma aplicação de linha de comando para marcação/desmarcação de consultas médicas. Ele foi desenvolvido como parte do Processo Seletivo da Aceleradora Ágil onde pude demonstrar minhas habilidades com Spring e H2 database.
 
