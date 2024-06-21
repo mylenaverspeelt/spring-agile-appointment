@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 @Component
 public class ExecuteMenu {
@@ -63,10 +64,8 @@ public class ExecuteMenu {
     }
 
     public void newPatient() throws Exception {
-        System.out.println("Informe o seu primeiro nome:");
-        String name = scanner.nextLine();
-        System.out.println("Informe o seu telefone para contato:");
-        String phone = scanner.nextLine();
+        String name = getInput("Informe o seu primeiro nome:", "^[\\p{L} .'-]+$", "Nome inválido. Tente novamente.");
+        String phone = getInput("Informe o seu telefone para contato com DDD:", "^[0-9]{10,15}$", "Telefone inválido. Tente novamente.");
 
         try {
             var registeredPatient = patientService.registerNewPatient(name, phone);
@@ -98,12 +97,14 @@ public class ExecuteMenu {
 
         Patient selectedPatient = patientsList.get(patientIndex);
 
-        System.out.println("Informe a data da consulta (formato: DD-MM-AAA):");
-        String dateInput = scanner.nextLine();
+//        System.out.println("Informe a data da consulta (formato: DD-MM-AAA):");
+//        String dateInput = scanner.nextLine();
+        String dateInput = getInput("Informe a data da consulta (formato: DD-MM-AAA):", "^\\d{2}-\\d{2}-\\d{4}$", "Data inválida. Tente novamente.");
         LocalDate date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-        System.out.println("Informe o horário da consulta (formato: HH:MM):");
-        String timeInput = scanner.nextLine();
+//        System.out.println("Informe o horário da consulta (formato: HH:MM):");
+//        String timeInput = scanner.nextLine();
+        String timeInput = getInput("Informe o horário da consulta (formato: HH:MM):", "^\\d{2}:\\d{2}$", "Horário inválido. Tente novamente.");
         LocalTime time = LocalTime.parse(timeInput);
 
         System.out.println("Informe a especialidade da consulta:");
@@ -149,7 +150,7 @@ public class ExecuteMenu {
             cancel();
         }
 
-        Appointment selectedAppointment = appointmentsList.get(appointmentIndex -1);
+        Appointment selectedAppointment = appointmentsList.get(appointmentIndex - 1);
 
         try {
             appointmentService.cancelAppointment(selectedAppointment.getId());
@@ -161,5 +162,21 @@ public class ExecuteMenu {
             showMenu();
         }
     }
+
+    private String getInput(String prompt, String regex, String errorMessage) {
+        Pattern pattern = Pattern.compile(regex);
+        String input;
+        while (true) {
+            System.out.println(prompt);
+            input = scanner.nextLine();
+            if (pattern.matcher(input).matches()) {
+                break;
+            } else {
+                System.out.println(errorMessage);
+            }
+        }
+        return input;
+    }
+
 
 }
