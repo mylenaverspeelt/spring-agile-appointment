@@ -94,10 +94,17 @@ public class ExecuteMenu {
         for (int i = 0; i < patientsList.size(); i++) {
             System.out.println((i + 1) + " - " + patientsList.get(i).getName());
         }
+        System.out.println("0 - Retornar ao menu principal");
 
         System.out.println("Informe o número do paciente que deseja realizar a marcação:");
         int patientIndex = scanner.nextInt() - 1;
         scanner.nextLine();
+
+
+        if (patientIndex == -1) {
+            showMenu();
+            return;
+        }
 
         Patient selectedPatient = patientsList.get(patientIndex);
 
@@ -140,10 +147,16 @@ public class ExecuteMenu {
             var formattedDate = appointmentsList.get(i).getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             System.out.println((i + 1) + " - " + appointmentsList.get(i).getSpecialty() + " - " + appointmentsList.get(i).getPatient().getName() + " - " + formattedDate + " - " + appointmentsList.get(i).getTime());
         }
+        System.out.println("0 - Retornar ao menu principal");
 
         System.out.println("Informe o número da consulta você deseja cancelar:");
         int appointmentIndex = scanner.nextInt();
         scanner.nextLine();
+
+        if (appointmentIndex == 0) {
+            showMenu();
+            return;
+        }
 
         if (appointmentIndex < 1 || appointmentIndex > appointmentsList.size()) {
             System.out.println("Opção inválida, tente novamente");
@@ -176,9 +189,16 @@ public class ExecuteMenu {
             System.out.println((i + 1) + " - " + patientsList.get(i).getName());
         }
 
+        System.out.println("0 - Retornar ao menu principal");
+
         System.out.println("Informe o número do paciente que deseja excluir:");
         int patientIndex = scanner.nextInt() - 1;
         scanner.nextLine();
+
+        if (patientIndex == -1) {
+            showMenu();
+            return;
+        }
 
         if (patientIndex < 0 || patientIndex >= patientsList.size()) {
             System.out.println("Opção inválida, tente novamente");
