@@ -10,7 +10,8 @@ Este projeto consiste em uma aplicação de linha de comando para marcação/des
 - Tratamento de Erros: Evita duplicidade de cadastro pelo mesmo telefone, impede marcação em horários já agendados e não permite agendamento retroativo.
 - Validação com Expressões Regulares (Regex): Utilizo expressões regulares para verificar e validar os inputs dos usuários, garantindo que as informações fornecidas estejam no formato correto e atendam aos critérios específicos de cada campo.
 - Opção de Retornar ao Menu Principal: Durante qualquer etapa do processo, o usuário pode optar por abortar a operação atual e retornar ao menu principal do sistema.
-
+- A estrutura de pastas foi pensada para facilitar a organização e manutenção do código, seguindo boas práticas de arquitetura e design de software. A lógica da regra de negócio está isolada na camada de serviço (service), enquanto as entidades (models) e a persistência (repository) são separadas de forma clara e coesa.
+  
 ### Tecnologias Utilizadas
 
 - Spring Boot + Spring Boot DevTools
