@@ -9,6 +9,5 @@ import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     List<Appointment> findByDateAndTime(LocalDate date, LocalTime time);
-    List<Appointment> findByDateAndTimeAndSpecialty(LocalDate date, LocalTime time, String specialty);
 
 }

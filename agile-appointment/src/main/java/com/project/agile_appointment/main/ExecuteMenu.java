@@ -36,7 +36,6 @@ public class ExecuteMenu {
                 1 - Cadastrar novo paciente
                 2 - Marcação de consultas
                 3 - Cancelamento de consultas
-                4 - Excluir paciente
                 0 - Sair                               
                 ***************************************  
                 """;
@@ -54,9 +53,6 @@ public class ExecuteMenu {
                 break;
             case 3:
                 cancel();
-                break;
-            case 4:
-                deletePatient();
                 break;
             case 0:
                 System.out.println("Programa encerrado.");
@@ -171,47 +167,6 @@ public class ExecuteMenu {
             showMenu();
         } catch (Exception e) {
             System.out.println("Erro ao cancelar consulta: " + e.getMessage());
-        } finally {
-            showMenu();
-        }
-    }
-
-    public void deletePatient() throws Exception {
-        List<Patient> patientsList = patientService.getAllPatients();
-
-        if (patientsList.isEmpty()) {
-            System.out.println("Nenhum paciente registrado.");
-            showMenu();
-        }
-
-        System.out.println("Pacientes cadastrados:");
-        for (int i = 0; i < patientsList.size(); i++) {
-            System.out.println((i + 1) + " - " + patientsList.get(i).getName());
-        }
-
-        System.out.println("0 - Retornar ao menu principal");
-
-        System.out.println("Informe o número do paciente que deseja excluir:");
-        int patientIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        if (patientIndex == -1) {
-            showMenu();
-            return;
-        }
-
-        if (patientIndex < 0 || patientIndex >= patientsList.size()) {
-            System.out.println("Opção inválida, tente novamente");
-            deletePatient();
-        }
-
-        Patient selectedPatient = patientsList.get(patientIndex);
-
-        try {
-            patientService.deletePatient(selectedPatient.getId());
-            System.out.println("Paciente " + selectedPatient.getName() + " excluído com sucesso!");
-        } catch (Exception e) {
-            System.out.println("Erro ao excluir paciente: " + e.getMessage());
         } finally {
             showMenu();
         }
